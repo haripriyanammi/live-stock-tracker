@@ -1,0 +1,14 @@
+# Node modules (very large files, auto-generated)
+node_modules/
+
+# TypeScript output files
+dist/
+
+# Environment variables (sensitive credentials)
+.env
+
+# Logs
+*.log
+
+# System junk files (just in case)
+.DS_Store
