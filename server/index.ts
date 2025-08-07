@@ -1,44 +1,46 @@
-    import express from 'express';
-    import http from 'http';
-    import { Server, Socket } from 'socket.io';
-    import path from 'path';
-     const app= express();
-     const server=http.createServer(app);
-        const io = new Server(server);
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import path from 'path';
 
-        app.use(express.static(path.join(__dirname, 'public')));
+// Create express app and HTTP server
+const app = express();
+const server = http.createServer(app);
 
-    io.on('connection',(socket) => {
-    console.log('A user connected');
-    
-socket.on('newNumber',(num:number)=> {
-        console.log(`Received number: ${num}`);
-        // Here you can handle the received number, e.g., store it or process it
-    let status='';
-        if(num>1)
-        {
-        status='rise';
-        }
-        else if(num<1)
-        {
-            status='down';
-        }
-            else
-        {
-           status='stable';
-        }   
+// Create Socket.IO server
+const io = new Server(server);
 
-        socket.emit('numberResult', {
-            number: num,
-            status: status
-            // message:'stock is ${status==='rise' ? 'increasing' : status==='down' ? 'decreasing' : 'stable'}'
-        
-        });
-    });
-    socket.on('disconnect', () => {
-        console.log('A user disconnected');
-    });
+// SERVE STATIC FILES from public directory (correct path)
+app.use(express.static(path.join(__dirname, '../public'))); // <- FIXED HERE
+
+// Default route (optional, serves index.html)
+app.get('/', (_, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
+
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  socket.on('new number', (num: number) => {
+    console.log(`Received number: ${num}`);
+
+    let status = '';
+    if (num > 1) status = 'rise';
+    else if (num < 1) status = 'fall';
+    else status = 'stable';
+
+    socket.emit('numberResult', {
+      number: num,
+      status,
+      message: `Stock is ${status === 'rise' ? 'rising' : status === 'down' ? 'falling' : 'stable'}`,
+    });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+});
+
 server.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+  console.log('Server is running at http://localhost:3000');
 });
