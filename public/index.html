@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Live Stock Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stock Tracker</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="container">
-    <h1>📊 Live Stock Tracker</h1>
+ <div class="container">
+    <h1>Live Stock Tracker</h1>
+<form id="stock-from">
+    <input type="text" id="stock-symbol" placeholder="Enter stock symbol" required>
+    <br>
+    </br>
+    <input type="number" id="target-price" placeholder="Enter your target price" required>
+    <br>
+    </br>
+    <button type="submit">submit</button>
+</form>
+<div id="status"></div>
+<ul id="history-log"></ul>
+<audio id="voice-message" controls></audio>
+</div>
 
-    <form id="numberForm">
-      <input type="number" id="numberInput" placeholder="Enter a number" required />
-      <br /><br />
-      <button type="submit">Submit</button>
-    </form>
-
-    <div id="notification" class="notification">Waiting for input...</div>
-
-    <ul id="history" class="history"></ul>
-  </div>
-
-  <!-- ✅ Use correct relative path (socket.io is auto-served by server) -->
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

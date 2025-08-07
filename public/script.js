@@ -1,4 +1,4 @@
-const socket = io(); // auto-connects to the server
+const socket = io();
 
 const form = document.getElementById('numberForm');
 const input = document.getElementById('numberInput');
@@ -7,10 +7,10 @@ const history = document.getElementById('history');
 
 form.addEventListener('submit', function (e) {
   e.preventDefault();
-  const value = parseFloat(input.value);
 
+  const value = parseFloat(input.value);
   if (isNaN(value)) {
-    alert("Please enter a valid number.");
+    alert('Please enter a valid number');
     return;
   }
 
