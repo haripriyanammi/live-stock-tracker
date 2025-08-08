@@ -1,28 +1,37 @@
 const socket = io();
+ 
+const form=document.getElementById('form');
+const stockInput=document.getElementById('stock-symbol');
+const priceInput=document.getElementById('target-price');
+const statusDiv=document.getElementById('status');
+const historyLog=document.getElementById('history-log');
+const voiceMessage=document.getElementById('voice-message');
 
-const form = document.getElementById('numberForm');
-const input = document.getElementById('numberInput');
-const notification = document.getElementById('notification');
-const history = document.getElementById('history');
-
-form.addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  const value = parseFloat(input.value);
-  if (isNaN(value)) {
-    alert('Please enter a valid number');
-    return;
-  }
-
-  socket.emit('new number', value);
-  input.value = '';
+form.addEventListener('submit',(e)=>{
+e.preventDefualt();//prevent default page load
+const symbol=stockInput.value.trim().toUpperCase();
+const price=parseFloat(priceInput.value);
+if(!symbol|| isNaN(price))
+{
+alert('please enter a valid type of stock and price');
+return;
+}
+socket.emit('track-stock',{symbol,price});
+stockInput.value='';
+priceInput.value='';
+statusDiv.textContent='tracking  started for'+symbol+'at $'+price;
 });
-
-socket.on('numberResult', function (data) {
-  notification.textContent = data.message;
-
-  const li = document.createElement('li');
-  li.textContent = `Number: ${data.number} - ${data.status.toUpperCase()}`;
-  li.classList.add(data.status);
-  history.appendChild(li);
-});
+socket.on('stock-update', ({ symbol, price, status, message, audioUrl }) => {
+const listItem=document.createElement('li');
+listItem.textContent='${symbol} :${price}->${status}';
+historyLog.prepend(listItem);
+});  
+statusDiv.textContent='Status:${symbol} is now ${status}';
+//voice message
+if(audioUrl){
+    voiceMessage.src=audioUrl;
+    voiceMessage.play();
+}
+if(message){
+    alert(message);
+}
