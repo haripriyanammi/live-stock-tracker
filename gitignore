@@ -12,3 +12,4 @@ dist/
 
 # System junk files (just in case)
 .DS_Store
+.env
